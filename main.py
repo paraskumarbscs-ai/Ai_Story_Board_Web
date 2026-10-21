@@ -25,7 +25,7 @@ app.add_middleware(
 )
 
 # YAHAN APNI GEMINI API KEY DALEN
-GEMINI_API_KEY = "AQ.Ab8RN6KxcwHSLTxtSRr9AVwj6zXIHSM03yIaDMyUUbGnNBG7OA"
+GEMINI_API_KEY = "Add api"
 
 os.makedirs("output_videos", exist_ok=True)
 app.mount(
