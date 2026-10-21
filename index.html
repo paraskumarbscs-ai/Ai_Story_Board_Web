@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Reel Generator - One Click</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans p-4 md:p-8 flex flex-col items-center justify-center">
+
+    <div class="max-w-xl w-full bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl">
+        
+        <div class="text-center mb-6">
+            <span class="text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full uppercase tracking-widest">Single-Click Studio</span>
+            <h1 class="text-3xl font-black text-white mt-3">🎬 Viral Short <span class="text-emerald-400">Generator</span></h1>
+            <p class="text-slate-400 text-xs mt-1">Paste a story -> Get a 100% finished vertical MP4 video</p>
+        </div>
+
+        <!-- Input Section -->
+        <div id="inputSection" class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Language</label>
+                    <select id="langSelect" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+                        <option value="Urdu / Roman Urdu">🇵🇰 Urdu (Asad RJ Voice)</option>
+                        <option value="Hindi / Roman Hindi">🇮🇳 Hindi (Madhur Voice)</option>
+                        <option value="English">🇺🇸 English (Deep Male)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Visual Vibe</label>
+                    <select id="artStyle" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+                        <option value="Cinematic Movie Shot">🎥 Cinematic Realistic</option>
+                        <option value="Dark Moody Noir">🕵️ Dark Mystery Noir</option>
+                        <option value="Studio Ghibli Anime">🎨 Anime Style</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Your Story / Script</label>
+                <textarea id="scriptInput" rows="5" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 leading-relaxed" placeholder="Ek ghareeb kisaan tha. Usne zameen khodi toh usey sone ka sandooq mila..."></textarea>
+            </div>
+
+            <button onclick="createFullVideo()" id="genBtn" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black py-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition text-sm flex items-center justify-center gap-2">
+                <span>✨ GENERATE COMPLETE MP4 VIDEO</span>
+            </button>
+        </div>
+        <!-- Live Production Loader (Hidden by default) -->
+        <div id="loaderCard" class="hidden py-8 text-center space-y-4">
+            <div class="relative w-16 h-16 mx-auto">
+                <div class="absolute inset-0 rounded-full border-4 border-slate-800"></div>
+                <div class="absolute inset-0 rounded-full border-4 border-emerald-400 border-t-transparent animate-spin"></div>
+            </div>
+            
+            <div>
+                <h3 id="stageTitle" class="text-base font-bold text-white animate-pulse">🧠 AI Director is analyzing script...</h3>
+                <p class="text-xs text-slate-500 mt-1">Stitching images & neural voiceover takes ~35 seconds</p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 max-w-xs mx-auto text-left font-mono text-[11px] text-emerald-400/80 space-y-1">
+                <p id="t1">✓ Server connection established</p>
+                <p id="t2" class="opacity-30">⏳ Writing storyboard scenes...</p>
+                <p id="t3" class="opacity-30">⏳ Painting 4K AI Images...</p>
+                <p id="t4" class="opacity-30">⏳ Rendering final MP4 movie...</p>
+            </div>
+        </div>
+
+        <!-- Video Result Container -->
+        <div id="resultCard" class="hidden mt-6 pt-6 border-t border-slate-800 text-center">
+            <h3 class="text-sm font-bold text-emerald-400 mb-3">🎉 Your Viral Short is Ready!</h3>
+            <video id="finalVideoPlayer" controls class="w-full max-h-[420px] rounded-2xl bg-black mx-auto shadow-2xl border border-slate-800"></video>
+            
+            <a id="downloadBtn" href="#" download="Viral_Short.mp4" target="_blank" class="mt-4 block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 rounded-xl transition text-xs uppercase tracking-wider">
+                ⬇️ Download MP4 File
+            </a>
+            <button onclick="location.reload()" class="mt-2 text-[11px] text-slate-500 hover:text-slate-400 underline block mx-auto">Create Another Video</button>
+        </div>
+
+    </div>
+
+    <script>
+        async function createFullVideo() {
+            const script = document.getElementById('scriptInput').value.trim();
+            const style = document.getElementById('artStyle').value;
+            const lang = document.getElementById('langSelect').value;
+
+            if(script.length < 10) return alert("Write a bit longer story!");
+
+            // Switch UI to Loader
+            document.getElementById('inputSection').classList.add('hidden');
+            document.getElementById('loaderCard').classList.remove('hidden');
+
+            // Fake Stage Progress for user reassurance
+            setTimeout(() => { 
+                document.getElementById('stageTitle').innerText = "🎙️ Recording Asad's Neural Voice..."; 
+                document.getElementById('t2').classList.remove('opacity-30');
+            }, 6000);
+            setTimeout(() => { 
+                document.getElementById('stageTitle').innerText = "🎨 Downloading HD AI Images..."; 
+                document.getElementById('t3').classList.remove('opacity-30');
+            }, 14000);
+            setTimeout(() => { 
+                document.getElementById('stageTitle').innerText = "🎞️ Stitching video frames together..."; 
+                document.getElementById('t4').classList.remove('opacity-30');
+            }, 24000);
+
+            try {
+                const res = await fetch('http://127.0.0.1:8000/api/generate-full-short', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({script_text: script, art_style: style, language: lang})
+                });
+
+                const data = await res.json();
+
+                if(!res.ok) throw new Error(data.detail || "Server failed");
+
+                // Show Result
+                document.getElementById('loaderCard').classList.add('hidden');
+                document.getElementById('resultCard').classList.remove('hidden');
+                
+                const player = document.getElementById('finalVideoPlayer');
+                player.src = data.video_url;
+                document.getElementById('downloadBtn').href = data.video_url;
+                player.play();
+
+            } catch(err) {
+                alert("⚠️ Error: " + err.message);
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
